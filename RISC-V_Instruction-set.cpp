@@ -422,5 +422,5 @@ void auipc(int rd, int imm) {
 }
 
 void quit(){
-    return;  // use this or use the comman exit(1)?
+    exit(1);
 }
