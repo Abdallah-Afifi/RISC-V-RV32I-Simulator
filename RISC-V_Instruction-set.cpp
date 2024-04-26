@@ -11,10 +11,10 @@ bool valid_imm(int n) {
 }
 
 void assert_label(string l) {
-    if(!l.size()) quit();
+    if(!l.size()) terminate();
     if(Map_name.count(l)) {    // Insert the map name in the Map_name
         cout << "This label " << l <<  " DOESN'T EXIST\n";
-        quit();
+        terminate();
     }
 }
 
@@ -29,13 +29,13 @@ void addi(int rd,int rs1, int imm){
             if (!rd) return;
             if (!valid_imm(imm)) {
                 cout << "ERROR: Cannot shift more than 12 bits. lw TERMINATED!"<< endl;
-                quit();
+                terminate();
             }
             int address = REG[rs1] + imm;
             if (Memory.find(address) != Memory.end()) REG[rd] = Memory[address];
             else {
                 cout << "ERROR: Loading from a non alocated address. lw TERMINATED!" << endl;
-                quit();
+                terminate();
             }
             program_counter += 4;
         }
@@ -49,7 +49,7 @@ void sral (int rd, int rs1,int imm){
     if (!rd) return;
     else if (imm<0 or imm<31) {
         cout << "ERROR: Cannot shift more than 31 BIT. sral TERMINATED!" << endl;
-        quit();
+        terminate();
     } 
     else REG[rd] = REG[rs1] >> imm;
     program_counter += 4;
@@ -86,7 +86,7 @@ void lui(int rd, int imm) {
     if (valid_imm(imm)) REG[rd] = (imm << 12);
     else {
         cout << "ERROR: Trying to input more than 20 bits in offset. lui TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
@@ -95,7 +95,7 @@ void sw(int rs1, int rs2, int imm) {
     int final_address = REG[rs2] + imm;
     if (final_address % 4) {
         cout << "Cannot sort a word that is not divisable by 4. sw TERMINATED!" << endl;
-        quit();
+        terminate();
     } else Memory[final_address] = REG[rs1];
     program_counter += 4;
 }
@@ -137,7 +137,7 @@ void sll(int rd, int rs1, int rs2) {
     if (!rd) return;
     else if (REG[rs2] > 31 | REG[rs2] < 0) {
         cout << "ERROR: Cannot shift more than 31 bit. sll TERMINATED!" << endl;
-        quit();
+        terminate();
     } else REG[rd] = REG[rs1] << REG[rs2];
     program_counter += 4;
 }
@@ -146,7 +146,7 @@ void srl(int rd, int rs1, int rs2) {
     if (!rd) return;
     else if (REG[rs2] > 31 | REG[rs2] < 0) {
         cout << "ERROR: Cannot shift more than 31 bit. srl TERMINATED!" << endl;
-        quit();
+        terminate();
     } else REG[rd] = REG[rs1] >> REG[rs2];
     program_counter += 4;
 }
@@ -162,7 +162,7 @@ void ori(int rd, int rs1, int imm) {
     if (!rd) return;
     else if (!valid_imm(imm)) {
         cout << "ERROR: Cannot shift more than 31 bit. ori TERMINATED!" << endl;
-        quit();
+        terminate();
     } else REG[rd] = REG[rs1] | imm;
     program_counter += 4;
 }
@@ -171,7 +171,7 @@ void slti(int rd, int rs1, int imm) {
     if (!rd) return;
     if (!valid_imm(imm)) {
         cout << "ERROR: Cannot input more than 12 bit in Immeediate. TERMINATED!" << endl;
-        quit();
+        terminate();
     } else (REG[rs1] < imm ? REG[rd] = 1 : REG[rd] = 0);
     program_counter += 4;
 }
@@ -194,7 +194,7 @@ void sltiu(int rd, int rs1, int imm) {
     if (!rd) return;
     if (!valid_imm(imm)) {
         cout << "ERROR: Cannot input more than 12 bit in Immeediate. sltiu TERMINATED!" << endl;
-        quit();
+        terminate();
    } else ((ui)REG[rs1] < (ui) imm ? REG[rd] = 1 : REG[rd] = 0);  //ui is form the map 
     program_counter += 4;
 }
@@ -213,7 +213,7 @@ void lb(int rd, int rs1, int imm) {
         }
     } else {
         cout << "ERROR: Cannot input more tham 12 bits in the immidate. LB TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
@@ -231,7 +231,7 @@ void lh(int rd, int rs1, int imm) {
         }
     } else { 
         cout << "ERROR: Cannot input more thsn 12 bits in immediate. LH TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
@@ -243,7 +243,7 @@ void bltu(int rs1, int rs2, string label) {
 
 void lhu(int rd, int rs1, int imm) {
     if (!rd) return;
-    if (good_imm(imm)) {
+    if (valid_imm(imm)) {
         int r = (REG[rs1] + imm) % 4;
         int address = REG[rs1] + imm - r;
         if (Memory.find(address) != Memroy.end()) {
@@ -255,7 +255,7 @@ void lhu(int rd, int rs1, int imm) {
         }
     } else {
         cout << "ERROR: Cannot input more than 12 bits in Immediate. LB TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
@@ -284,7 +284,7 @@ void sh(int rs1, int rs2, int imm) {
     int address = REG[rs2] + imm, r = address % 4, final_address = address - r;
     if (final_address % 2) {
         cout << "Cannot store a half word that is not divisable by 2.  sh TERMINATED!" << endl;
-        quit();
+        terminate();
     } else {
         ui half = REG[rs1] << 16;
         half = half >> 16;
@@ -306,7 +306,7 @@ void beq(int rs1, int rs2, string label) {
 
 void beq(int rs1, int rs2, int offset) {
     if (REG[rs1] == REG[rs2]) {
-        if (good_imm(offset)) program_counter = program_counter + 2 * offset;
+        if (valid_imm(offset)) program_counter = program_counter + 2 * offset;
         else {
             cout << "ERROR:  Cannot input more than 12 bits in the offset. beq TERMINATED!" << endl;
             system("pause");
@@ -321,7 +321,7 @@ void bne(int rs1, int rs2, string label) {
 }
 void bne(int rs1, int rs2, int offset) {
     if (REG[rs1] != REG[rs2]) {
-        if (good_imm(offset)) program_counter = program_counter + 2 * offset;
+        if (valid_imm(offset)) program_counter = program_counter + 2 * offset;
         else {
             cout << "ERROR: Cannot input more than 12 bits in the offset. bne TERMINATED!" << endl;
             system("pause");
@@ -336,7 +336,7 @@ void blt(int rs1, int rs2, string label) {
 }
 void blt(int rs1, int rs2, int offset) {
     if (REG[rs1] < REG[rs2]) {
-        if (good_imm(offset)) {
+        if (valid_imm(offset)) {
             program_counter = program_counter + 2 * offset;
         } else {
             cout << "ERROR: Cannot input more than 12 bits in the offset. blt TERMINATED!" << endl;
@@ -353,7 +353,7 @@ void bge(int rs1, int rs2, string label) {
 
 void bge(int rs1, int rs2, int offset) {
     if (REG[rs1] >= REG[rs2]) {
-        if (good_imm(offset)) program_counter = program_counter + 2 * offset;
+        if (valid_imm(offset)) program_counter = program_counter + 2 * offset;
         else {
             cout << "ERROR: Cannot input more than 12 bits in the offset. bge TERMINATED!" << endl;
             system("pause");
@@ -369,7 +369,7 @@ void bgeu(int rs1, int rs2, string label) {
 
 void bgeu(int rs1, int rs2, int offset) {
     if ((ui) REG[rs1] >= (ui) REG[rs2]) {
-        if (good_imm(offset)) program_counter = program_counter + 2 * offset;
+        if (valid_imm(offset)) program_counter = program_counter + 2 * offset;
         else {
             cout << "ERROR: Cannot input more than 12 bits in the offset. bgue  TERMINATED!" << endl;
             system("pause");
@@ -386,41 +386,41 @@ void jal(int rd, string label) {
 }
 void jal(int rd, int offset) {
     if (rd != 0) REG[rd] = program_counter + 4;
-    if (good_imm(offset)) program_counter = program_counter + (offset << 1);
+    if (valid_imm(offset)) program_counter = program_counter + (offset << 1);
     else {    
         cout << "ERROR: Cannot input more than 20 buts in offset. jal TERMINATED!" << endl;
-        quit();
+        terminate();
     }
 }
 
 void jalr(int rd, int rs1, int imm) {
     if (rd != 0) REG[rd] = program_counter + 4;
-    if (!good_imm(imm)) {
+    if (!valid_imm(imm)) {
         cout << "ERROR: Cannot shift more than 12 bits. jalr TERMINATED!" << endl;
-        quit();
+        terminate();
     } else program_counter = REG[rs1] + imm;
 }
 
 void lui(int rd, int imm) {
     if (!rd) return;
-    if (good_imm(imm)) REG[rd] = (imm << 12);
+    if (valid_imm(imm)) REG[rd] = (imm << 12);
     else {
         cout << "ERROR: Cannot input more than 20 bits in offset. lui TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
 
 void auipc(int rd, int imm) {
     if (!rd) return;
-    if (good_imm(imm)) REG[rd] = program_counter + (imm << 12);
+    if (valid_imm(imm)) REG[rd] = program_counter + (imm << 12);
     else {
         cout << "ERROR: Cannot input more than 20 bits in offset. auip TERMINATED!" << endl;
-        quit();
+        terminate();
     }
     program_counter += 4;
 }
 
-void quit(){
+void terminate(){
     exit(1);
 }
