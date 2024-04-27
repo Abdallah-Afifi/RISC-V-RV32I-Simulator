@@ -1,0 +1,19 @@
+addi x2,x2,-12 #allocate space on the stack 
+sw x19,8(x2)  #save x19 on the stack 
+sw x5,4(x2)   #save x5 on the stack 
+sw x6,0(x2)   #save x6 on the stack 
+addi x10,x0,20
+addi x11,x0,10
+addi x12,x0,15
+addi x13,x0,7
+add x5,x10,x11 #temp1=a+b
+add x6,x12,x13 #temp1=c+d
+sub x19,x5,x6  #x19=temp1-temp2
+lw x19,8(x2)  #restore x19 form the stack 
+lw x5,4(x2)   #restore temp1 from stack
+lw x6,0(x2)   #retsore temp2 from stack 
+addi x2,x2,12 #dealocate all data and return to orginal address
+jr x1 #retrun 
+
+
+

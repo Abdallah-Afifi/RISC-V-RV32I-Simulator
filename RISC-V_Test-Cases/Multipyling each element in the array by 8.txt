@@ -1,0 +1,24 @@
+C code:
+int arr[10];
+int i;
+for(i=0;i<10;i++]{
+	arr[i]=arr[i]*8;
+}
+
+RISC-V Program (s0=arr[0],s1=i):
+addi s1,zero,0
+lui s0,0x23b8f #base address
+addi t1,zero,10
+For: 
+	beg s1,t2,done
+	slli t0,s1,2
+	add t0,t0,s0
+	lw t1,0(t0)
+	slli t1,t1,3
+	sw t1,0(t0)
+	addi s1,s1,1
+	j loop
+done:
+	jalr ra
+	
+	
