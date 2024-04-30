@@ -1,0 +1,35 @@
+Development Journal for RISC-V Simulator Project - Abdallah
+
+April 12, 9:00 AM: Setup development environment for C++ and familiarized with RISC-V ISA. Created initial project structure as outlined in the project directory guidelines.
+
+April 13, 10:30 AM: Started designing instruction parsing classes. Established basic structures to represent and handle RISC-V instructions.
+
+April 14, 2:45 PM: Implemented initial parsing logic in instruction.cpp to differentiate RISC-V instruction formats and identify operation types.
+
+April 15, 11:20 AM: Designed memory management module in memory.h. Focused on creating a lightweight simulation of the 4 GB address space.
+
+April 16, 3:10 PM: Completed basic memory allocation and access functions in memory.cpp to simulate memory operations without excessive resource usage.
+
+April 17, 4:00 PM: Created register file architecture in register.h, ensuring register 0 always returns zero and is unwritable.
+
+April 18, 1:30 PM: Implemented register operations. Added functionality for read and write operations, respecting special conditions of register 0.
+
+April 19, 10:00 AM: Developed core simulation control logic. Laid out main class structure to integrate instruction, memory, and register modules.
+
+April 20, 2:00 PM: Integrated instruction decoding and execution logic within the simulator's main loop.
+
+April 21, 12:00 PM: Started implementing individual RISC-V instructions, ensuring each instruction's effect on registers and memory was accurately simulated.
+
+April 22, 3:30 PM: Continued with instruction implementation, focusing on computational and branch instructions.
+
+April 23, 1:00 PM: Began testing phase by writing unit tests for instruction parsing. Fixed several bugs in immediate value extraction.
+
+April 24, 10:15 AM: Expanded testing to memory and register modules using example assembly programs provided.
+
+April 25, 4:50 PM: Identified and fixed a critical issue in the program counter update mechanism during conditional branching. Adjusted the logic to handle jumps and branches more accurately.
+
+April 26, 9:45 AM: Conducted a full system integration test. Debugged and resolved issues with memory management during complex instruction sequences.
+
+April 27, 11:00 AM: Completed documentation for the simulator. Documented setup instructions, usage guide, and design decisions.
+
+April 27, 3:30 PM: Finalized and polished the entire codebase. Reviewed all components to enhance performance and readability. Prepared for project submission.
