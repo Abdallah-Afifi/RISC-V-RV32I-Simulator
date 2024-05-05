@@ -29,7 +29,7 @@ What you need to install the software:
    ```
 3. Compile the project:
    ```bash
-   g++ -o sim g++ B.cpp helper.cpp I.cpp J.cpp R.cpp ru.cpp S.cpp U.cpp
+   g++ -o sim g++ B.cpp helper.cpp I.cpp J.cpp R.cpp run.cpp S.cpp U.cpp
    ```
 
 ## Usage
